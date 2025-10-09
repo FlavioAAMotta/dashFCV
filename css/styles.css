@@ -460,19 +460,22 @@ body {
 
 .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 12px;
 }
 
 .metric-card {
     background: var(--gradient-card);
-    border-radius: 16px;
-    padding: 24px;
+    border-radius: 12px;
+    padding: 10px 12px;
     box-shadow: var(--shadow-md);
     transition: var(--transition-normal);
     border: 1px solid rgba(255, 255, 255, 0.8);
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
 }
 download-icon
 .metric-card::before {
@@ -511,24 +514,34 @@ download-icon
 }
 
 .metric-icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 16px;
+    width: 18px;
+    height: 18px;
+    margin-bottom: 0;
     opacity: 0.8;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.metric-content {
+    flex: 1;
+    min-width: 0;
 }
 
 .metric-content h3 {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-xs);
     font-weight: 600;
     color: var(--text-light);
-    margin-bottom: 8px;
+    margin-bottom: 3px;
+    line-height: 1.2;
 }
 
 .metric-value {
-    font-size: var(--font-size-4xl);
+    font-size: var(--font-size-2xl);
     font-weight: 700;
     color: var(--text-dark);
-    margin-bottom: 8px;
+    margin-bottom: 2px;
+    line-height: 1.2;
+    display: inline;
 }
 
 .metric-change {
@@ -550,25 +563,30 @@ download-icon
 }
 
 .metric-percentage {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-sm);
     font-weight: 600;
     color: var(--text-light);
-    margin-bottom: 12px;
+    margin-bottom: 4px;
+    display: inline;
+    margin-left: 4px;
 }
 
 .metric-unit {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-xs);
     color: var(--text-light);
     font-weight: 500;
+    line-height: 1.2;
+    display: inline;
+    margin-left: 2px;
 }
 
 .progress-bar {
     width: 100%;
-    height: 8px;
+    height: 5px;
     background: #e9ecef;
-    border-radius: 4px;
+    border-radius: 3px;
     overflow: hidden;
-    margin-top: 12px;
+    margin-top: 4px;
 }
 
 .progress-fill {
@@ -972,6 +990,22 @@ download-icon
 }
 
 /* Responsividade */
+/* Tablets e telas médias - 4 cards por linha */
+@media (max-width: 1400px) {
+    .metrics-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+}
+
+/* Tablets pequenos - 2 cards por linha */
+@media (max-width: 900px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+}
+
 @media (max-width: 1200px) {
     .charts-grid,
     .analysis-grid,
@@ -1030,11 +1064,11 @@ download-icon
     
     .metrics-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 12px;
     }
     
     .metric-card {
-        padding: 20px;
+        padding: 16px;
     }
     
     .chart-card {
@@ -1076,7 +1110,7 @@ download-icon
     }
     
     .metric-value {
-        font-size: var(--font-size-3xl);
+        font-size: var(--font-size-2xl);
     }
     
     .chart-container {

@@ -261,7 +261,14 @@ class FCVDashboard {
             average_age: average_age,
             period_start: years[0],
             period_end: years[years.length - 1],
-            current_year_cases: processedData.filter(d => d.ANO === years[years.length - 2]).length
+            // Pega sempre os casos de 2024
+            current_year_cases: processedData.filter(d => {
+                const ano = parseInt(d.ANODIAG);
+                return ano === 2024;
+            }).length || processedData.filter(d => {
+                const ano = parseInt(d.ANODIAG);
+                return ano === 2023;
+            }).length
         };
 
         // 2. Evolução temporal
@@ -785,12 +792,12 @@ class FCVDashboard {
         // Pacientes masculinos
         this.animateNumber('malePatients', overview.total_male);
         document.getElementById('malePercentage').textContent = `${overview.male_percentage}%`;
-        document.getElementById('maleProgress').style.width = `${overview.male_percentage}%`;
+        // document.getElementById('maleProgress').style.width = `${overview.male_percentage}%`;
 
         // Pacientes femininos
         this.animateNumber('femalePatients', overview.total_female);
         document.getElementById('femalePercentage').textContent = `${overview.female_percentage}%`;
-        document.getElementById('femaleProgress').style.width = `${overview.female_percentage}%`;
+        // document.getElementById('femaleProgress').style.width = `${overview.female_percentage}%`;
 
         // Idade média
         this.animateNumber('averageAge', overview.average_age, 1);
