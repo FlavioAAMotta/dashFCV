@@ -474,8 +474,10 @@ body {
     position: relative;
     overflow: hidden;
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 120px;
 }
 download-icon
 .metric-card::before {
@@ -516,15 +518,26 @@ download-icon
 .metric-icon {
     width: 18px;
     height: 18px;
-    margin-bottom: 0;
+    margin-bottom: 8px;
     opacity: 0.8;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 0;
 }
 
 .metric-content {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.metric-value-container {
+    margin-top: auto;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
 }
 
 .metric-content h3 {
@@ -539,7 +552,8 @@ download-icon
     font-size: var(--font-size-2xl);
     font-weight: 700;
     color: var(--text-dark);
-    margin-bottom: 2px;
+    margin-bottom: 0;
+    margin-top: 0;
     line-height: 1.2;
     display: inline;
 }
@@ -577,7 +591,8 @@ download-icon
     font-weight: 500;
     line-height: 1.2;
     display: inline;
-    margin-left: 2px;
+    margin-left: 4px;
+    margin-bottom: 0;
 }
 
 .progress-bar {
