@@ -1,0 +1,1124 @@
+/* Reset e Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos para Botões de Download */
+.download-btn {
+    background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--primary-blue) 100%);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    gap: 8px;
+    text-decoration: none;
+    font-family: var(--font-family);
+    min-width: 120px;
+    justify-content: center;
+}
+chart-header
+.download-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+}
+
+.download-btn:hover::before {
+    left: 100%;
+}
+
+.download-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+}
+
+.download-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 149, 218, 0.3);
+}
+
+/* Ícone de download animado */
+.download-btn .download-icon {
+    font-size: 16px;
+    transition: transform var(--transition-normal);
+}
+
+.download-btn:hover .download-icon {
+    transform: translateY(2px);
+}
+
+/* Variantes de botões */
+.download-btn.success {
+    background: linear-gradient(135deg, var(--accent-green) 0%, #4ecdc4 100%);
+}
+
+.download-btn.success:hover {
+    background: linear-gradient(135deg, #4ecdc4 0%, var(--accent-green) 100%);
+}
+
+.download-btn.warning {
+    background: linear-gradient(135deg, var(--accent-yellow) 0%, #f6d55c 100%);
+    color: var(--text-dark);
+}
+
+.download-btn.warning:hover {
+    background: linear-gradient(135deg, #f6d55c 0%, var(--accent-yellow) 100%);
+}
+
+.download-btn.danger {
+    background: linear-gradient(135deg, var(--accent-pink) 0%, #e74c3c 100%);
+}
+
+.download-btn.danger:hover {
+    background: linear-gradient(135deg, #e74c3c 0%, var(--accent-pink) 100%);
+}
+
+/* Estado de loading para botões */
+.download-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.download-btn.loading .download-icon {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Responsividade para botões */
+@media (max-width: 768px) {
+    .download-btn {
+        padding: 8px 16px;
+        font-size: var(--font-size-xs);
+        min-width: 120px;
+    }
+}
+
+:root {
+    /* Cores FCV */
+    --primary-blue: #1a3866;
+    --secondary-blue: #0095da;
+    --accent-pink: #b4325b;
+    --accent-yellow: #efbc33;
+    --accent-green: #2e8a87;
+    --neutral-gray: #727272;
+    --light-gray: #f8f9fa;
+    --white: #ffffff;
+    --text-dark: #2c3e50;
+    --text-light: #6c757d;
+    
+    /* Gradientes */
+    --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+    
+    /* Transições */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Tipografia */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--light-gray);
+    color: var(--text-dark);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.header {
+    background: var(--gradient-primary);
+    color: var(--white);
+    padding: 20px 0;
+    box-shadow: var(--shadow-lg);
+    position: block;
+    top: 0;
+    z-index: 2000;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-icon {
+    height: 50px;
+    width: auto;
+    filter: brightness(0) invert(1);
+}
+
+.logo-text {
+    height: 40px;
+    width: auto;
+    filter: brightness(0) invert(1);
+}
+
+.header-title {
+    text-align: center;
+    flex: 1;
+}
+
+.header-title h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.header-title p {
+    font-size: var(--font-size-base);
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+.header-info {
+    text-align: right;
+}
+
+.update-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+    margin-bottom: 2px;
+}
+
+.update-time {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+}
+
+/* Filtros */
+.filters-section {
+    background: var(--white);
+    padding: 20px 0;
+    border-bottom: 1px solid #e9ecef;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 2000;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    align-items: end;
+    margin-top: 1%;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+/* Altera a largura do seletor */
+.vscomp-ele.pop-comp-ele{
+    width: 100%;
+    max-width: none;   
+}
+.vscomp-options-container{
+    overflow-y: auto;
+}
+
+.vscomp-value{
+    color: black;
+    background-color: white;
+}
+
+.vscomp-options-list {
+    height:'auto'
+}
+
+/* Altera a largura do seletor */
+.custom-wrapper {
+     /* Exemplo: define uma largura fixa */
+    border-radius: 10px; /* Exemplo: cantos mais arredondados */
+}
+
+/* Altera o estilo do campo de entrada (onde o texto é exibido) */
+.custom-wrapper .vscomp-toggle-button {
+    border: 1px solid #82bfff; /* Borda azul */
+    background-color: #fdfdfd; /* Fundo azul claro */
+    padding: 12px ;
+    color: black;
+    border-radius: 2px;
+    
+}
+
+/* Altera o estilo da lista de opções (dropdown) */
+.custom-wrapper .vscomp-menu {
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+     /* Limita a altura da lista */
+}
+
+.filter-select {
+    padding: 2px 10px; /* Reduzindo o padding */
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: var(--font-size-sm); /* Usando um tamanho de fonte menor */
+    background: var(--white);
+    color: var(--text-dark);
+    transition: var(--transition-fast);
+    cursor: pointer;
+    height: 38px; /* Definindo uma altura fixa para ser compacto */
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 149, 218, 0.1);
+}
+
+.filter-select:hover {
+    border-color: var(--secondary-blue);
+}
+
+.clear-filters-btn {
+    padding: 12px 16px;
+    border: 2px solid var(--accent-pink);
+    border-radius: 8px;
+    font-size: var(--font-size-base);
+    background: var(--white);
+    color: var(--accent-pink);
+    transition: var(--transition-fast);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.clear-filters-btn:hover {
+    background: var(--accent-pink);
+    color: var(--white);
+    transform: translateY(-1px);
+}
+
+.clear-filters-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.active-filters-indicator {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(0, 149, 218, 0.1);
+    border: 1px solid var(--secondary-blue);
+    border-radius: 8px;
+    display: none;
+}
+
+.indicator-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--secondary-blue);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+}
+
+.indicator-icon {
+    font-size: var(--font-size-base);
+}
+
+.active-filters-list {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.filter-tag {
+    background: var(--secondary-blue);
+    color: var(--white);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+}
+
+/* Métricas */
+.metrics-section {
+    padding: 60px 0 40px 0;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.metric-card {
+    background: var(--gradient-card);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+download-icon
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+.metric-card[data-metric="total"] .metric-icon {
+    color: var(--primary-blue);
+}
+
+.metric-card[data-metric="new"] .metric-icon {
+    color: var(--accent-green);
+}
+
+.metric-card[data-metric="male"] .metric-icon {
+    color: var(--secondary-blue);
+}
+
+.metric-card[data-metric="female"] .metric-icon {
+    color: var(--accent-pink);
+}
+
+.metric-card[data-metric="age"] .metric-icon {
+    color: var(--accent-yellow);
+}
+
+.metric-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    opacity: 0.8;
+}
+
+.metric-content h3 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 8px;
+}
+
+.metric-value {
+    font-size: var(--font-size-4xl);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.metric-change {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.metric-change.positive {
+    background: rgba(46, 138, 135, 0.1);
+    color: var(--accent-green);
+}
+
+.metric-change.negative {
+    background: rgba(180, 50, 91, 0.1);
+    color: var(--accent-pink);
+}
+
+.metric-percentage {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 12px;
+}
+
+.metric-unit {
+    font-size: var(--font-size-base);
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: 4px;
+    transition: width var(--transition-slow);
+}
+
+/* Seções de Gráficos */
+.charts-section,
+.analysis-section,
+.geographic-section,
+.histology-section,
+.clinical-section {
+    padding: 40px 0;
+}
+
+.charts-grid,
+.analysis-grid,
+.geographic-grid,
+.clinical-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 32px;
+}
+
+.histology-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.chart-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.chart-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.chart-card-estadiam{
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px; /* Alterado de 4% para um valor fixo */
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos no tamanho total */
+    min-height: 600px; /* Define uma altura mínima para o cartão */
+    /* Define uma altura máxima para o cartão */
+    display: flex; /* Habilita o Flexbox */
+    flex-direction: column; /* Organiza os itens em coluna */
+}
+.chart-card-estadiam:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.chart-container-estadiam{
+    position: relative;
+    height: 80%;
+    width: 100%;
+}
+
+.chart-card-estadiam canvas {
+    width: 100%; /* Removido !important */
+    height: auto; /* Removido !important */
+    display: block;
+    flex-grow: 1; /* Permite que o canvas ocupe o espaço disponível */
+}
+
+.chart-card-estadiam img {
+    max-width: 100%;
+    height: auto;
+}
+.chart-card-geografic{
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px; /* Alterado de 4% para um valor fixo */
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-sizing: border-box; /* Garante que padding e borda sejam incluídos no tamanho total */
+    min-height: 600px; /* Define uma altura mínima para o cartão */
+    /* Define uma altura máxima para o cartão */
+    display: flex; /* Habilita o Flexbox */
+    flex-direction: column; /* Organiza os itens em coluna */
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--light-gray);
+}
+
+.chart-header h3 {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.chart-header p {
+    font-size: var(--font-size-sm);
+    color: var(--text-light);
+}
+
+.chart-container {
+    position: relative;
+    height: 380px;
+    width: 100%;
+}
+
+.table-container {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+}
+
+.ranking-table th {
+    background: var(--light-gray);
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-dark);
+    border-bottom: 2px solid #dee2e6;
+    position: sticky;
+    top: 0;
+}
+
+.ranking-table td {
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+    transition: var(--transition-fast);
+}
+
+.ranking-table tbody tr:hover {
+    background: rgba(0, 149, 218, 0.05);
+}
+
+.ranking-table .position {
+    font-weight: 700;
+    color: var(--primary-blue);
+    width: 60px;
+}
+
+.ranking-table .percentage {
+    font-weight: 600;
+    color: var(--accent-green);
+}
+
+/* Tabela de Histologia */
+.histology-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+}
+
+.histology-table th {
+    background: var(--light-gray);
+    padding: 16px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-dark);
+    border-bottom: 2px solid #dee2e6;
+    position: sticky;
+    top: 0;
+}
+
+.histology-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #e9ecef;
+    transition: var(--transition-fast);
+}
+
+.histology-table tbody tr:hover {
+    background: rgba(0, 149, 218, 0.05);
+}
+
+.histology-table .position {
+    font-weight: 700;
+    color: var(--primary-blue);
+    width: 80px;
+    text-align: center;
+}
+
+.histology-table .histology-type {
+    font-weight: 500;
+    color: var(--text-dark);
+    max-width: 300px;
+}
+
+.histology-table .cases {
+    font-weight: 600;
+    color: var(--text-dark);
+    text-align: right;
+}
+
+.histology-table .percentage {
+    font-weight: 600;
+    color: var(--accent-green);
+    text-align: right;
+}
+
+.histology-table .outros-row {
+    background: rgba(0, 0, 0, 0.02);
+    border-top: 2px solid var(--light-gray);
+}
+
+.histology-table .outros-row .histology-type {
+    font-style: italic;
+    color: var(--text-light);
+}
+
+/* Estilos de paginação */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.pagination-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.pagination-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.page-numbers {
+    font-size: 1.1em;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Responsividade básica */
+@media (max-width: 768px) {
+    .pagination-button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+    .page-numbers {
+        font-size: 1em;
+    }
+}
+
+/*Menu flutuante*/
+.config-section{
+    position: fixed;
+    /*border: solid black 1px;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px; /* Tamanho fixo */
+    height: 50px; /* Tamanho fixo */
+    bottom: 20px; /* Espaçamento da parte inferior */
+    right: 20px; /* Espaçamento da direita */
+    padding: 0; /* Padding da seção, imagem agora preenche */
+    border-radius: 50%; /* Botão circular */
+    background-color: var(--primary-blue); /* Cor de fundo */
+    box-shadow: var(--shadow-md); /* Sombra para profundidade */
+    transition: var(--transition-normal); /* Transição suave */
+    z-index: 100;
+}
+
+.config-section:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.config-img{
+    width: 60%; /* Ajuste o tamanho da imagem dentro do botão */
+    height: 60%; /* Ajuste o tamanho da imagem dentro do botão */
+    object-fit: contain;
+    filter: brightness(0) invert(1); /* Torna o ícone branco */
+    cursor: pointer;
+}
+
+.config-div{
+    background-color: var(--white);
+    /*border: solid black 1px;*/ /* Removido */
+    box-shadow: var(--shadow-lg); /* Sombra mais pronunciada */
+    border-radius: 12px; /* Bordas arredondadas */
+    position: fixed;
+    margin: 0; /* Removido */
+    padding: 20px; /* Padding interno */
+    width: 250px; /* Largura fixa */
+    height: auto; /* Altura automática */
+    bottom: 80px; /* Posicionado acima do botão */
+    right: 20px; /* Alinhado com o botão */
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espaçamento entre os itens */
+
+    /* Propriedades para esconder/mostrar com transição */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+
+.config-div--open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.config-div p {
+    font-size: var(--font-size-sm);
+    color: var(--text-dark);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.config-div input[type="checkbox"] {
+    accent-color: var(--secondary-blue);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.config-div-encoder{
+    /* display: none; */ /* Removido para permitir transições */
+    opacity: 0; /* Esconde com opacidade */
+    visibility: hidden; /* Garante que não é interativo */
+    transform: translateY(20px); /* Move para fora da tela */
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+}
+/* Loading */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.loading-spinner {
+    text-align: center;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--light-gray);
+    border-top: 4px solid var(--secondary-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner p {
+    font-size: var(--font-size-base);
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .charts-grid,
+    .analysis-grid,
+    .geographic-grid,
+    .clinical-grid {
+        grid-template-columns: 1fr;
+    }
+    .filters-section{
+        /*position: static;*/
+    }
+    
+    .chart-card {
+        min-width: unset;
+    }
+   
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    .filters-section{
+        position: static;
+    }
+    
+    .logo-section {
+        justify-content: center;
+    }
+    
+    .header-title {
+        order: -1;
+    }
+    
+    .header-title h1 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .filters-section {
+        top: 140px;
+    }
+    
+    .filters-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .metric-card {
+        padding: 20px;
+    }
+    
+    .chart-card {
+        padding: 20px;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+    
+    .histology-table {
+        font-size: var(--font-size-xs);
+    }
+    
+    .histology-table th,
+    .histology-table td {
+        padding: 12px 8px;
+    }
+    
+    .histology-table .histology-type {
+        max-width: 200px;
+    }
+    
+    .container {
+        padding: 0 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-title h1 {
+        font-size: var(--font-size-xl);
+    }
+    
+    .filters-section {
+        top: 160px;
+    }
+    .filters-section{
+        position: static;
+    }
+    
+    .metric-value {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    .logo-icon,
+    .logo-text {
+        height: 35px;
+    }
+}
+
+/* Animações */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.metric-card,
+.chart-card {
+    animation: fadeInUp var(--transition-slow) ease-out;
+}
+
+.metric-card:nth-child(1) { animation-delay: 0.1s; }
+.metric-card:nth-child(2) { animation-delay: 0.2s; }
+.metric-card:nth-child(3) { animation-delay: 0.3s; }
+.metric-card:nth-child(4) { animation-delay: 0.4s; }
+.metric-card:nth-child(5) { animation-delay: 0.5s; }
+
+/* Estados de carregamento */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Utilitários */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-primary {
+    color: var(--primary-blue);
+}
+
+.text-secondary {
+    color: var(--secondary-blue);
+}
+
+.text-success {
+    color: var(--accent-green);
+}
+
+.text-warning {
+    color: var(--accent-yellow);
+}
+
+.text-danger {
+    color: var(--accent-pink);
+}
+
+/* Estilos para o Footer */
+footer {
+    background: var(--gradient-primary); /* Fundo com gradiente */
+    color: var(--white); /* Texto branco */
+    padding: 20px 0; /* Espaçamento interno */
+    text-align: center; /* Centralizar o texto */
+    margin-top: 40px; /* Espaçamento do conteúdo acima */
+    box-shadow: var(--shadow-lg); /* Sombra sutil */
+    font-size: var(--font-size-sm);
+    font-weight: 400;
+}
+
+footer p {
+    max-width: 1400px;
+    margin: 0 auto; /* Centraliza o parágrafo */
+    padding: 0 20px; /* Mantém o padding lateral */
+}
+
