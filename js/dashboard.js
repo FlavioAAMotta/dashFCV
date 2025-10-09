@@ -2616,7 +2616,6 @@ class FCVDashboard {
         if (this.filterTimeout) {
             clearTimeout(this.filterTimeout);
         }
-        this.showLoading();
 
         this.filterTimeout = setTimeout(async () => {
 
@@ -2626,8 +2625,6 @@ class FCVDashboard {
                 this.updateCharts();
             } catch (error) {
                 console.error('Erro ao aplicar filtros:', error);
-            } finally {
-                this.hideLoading();
             }
         }, 150); // Debounce de 150ms
     }
