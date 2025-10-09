@@ -256,6 +256,42 @@ body {
     z-index: 2000;
 }
 
+.toggle-filters-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: transparent;
+    color: var(--primary-dark);
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+}
+
+.toggle-filters-btn:hover {
+    background: #f8f9fa;
+    border-color: var(--secondary-blue);
+    color: var(--secondary-blue);
+}
+
+.toggle-filters-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.filters-content {
+    transition: max-height 0.3s ease;
+    max-height: 1500px;
+}
+
+.filters-content.collapsed {
+    max-height: 0;
+    overflow: hidden;
+}
+
 .filters-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -304,7 +340,8 @@ body {
 .custom-wrapper .vscomp-toggle-button {
     border: 1px solid #82bfff; /* Borda azul */
     background-color: #fdfdfd; /* Fundo azul claro */
-    padding: 12px ;
+    padding: 12px;
+    min-height: 44px;
     color: black;
     border-radius: 2px;
     
@@ -340,29 +377,29 @@ body {
 }
 
 .clear-filters-btn {
-    padding: 12px 16px;
-    border: 2px solid var(--accent-pink);
-    border-radius: 8px;
-    font-size: var(--font-size-base);
+    padding: 6px 12px;
+    border: 1px solid var(--accent-pink);
+    border-radius: 6px;
+    font-size: var(--font-size-xs);
     background: var(--white);
     color: var(--accent-pink);
     transition: var(--transition-fast);
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .clear-filters-btn:hover {
     background: var(--accent-pink);
     color: var(--white);
-    transform: translateY(-1px);
 }
 
 .clear-filters-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
 }
 
 .active-filters-indicator {
@@ -375,6 +412,19 @@ body {
 }
 
 .indicator-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.indicator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.indicator-info {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -968,6 +1018,14 @@ download-icon
     .filters-grid {
         grid-template-columns: 1fr;
         gap: 16px;
+    }
+    
+    .indicator-header {
+        flex-wrap: wrap;
+    }
+    
+    .clear-filters-btn {
+        font-size: var(--font-size-xs);
     }
     
     .metrics-grid {

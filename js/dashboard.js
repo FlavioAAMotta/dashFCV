@@ -560,11 +560,22 @@ class FCVDashboard {
             this.applyFilters();
         });
 
-        // Adicionar botão de limpar filtros se existir
-        const clearFiltersBtn = document.getElementById('clearFilters');
-        if (clearFiltersBtn) {
-            clearFiltersBtn.addEventListener('click', () => {
-                this.clearFilters();
+        // Toggle dos filtros
+        const toggleBtn = document.getElementById('toggleFilters');
+        const filtersContent = document.getElementById('filtersContent');
+        const toggleIcon = document.getElementById('toggleIcon');
+        
+        if (toggleBtn && filtersContent && toggleIcon) {
+            toggleBtn.addEventListener('click', () => {
+                const isCollapsed = filtersContent.classList.contains('collapsed');
+                
+                if (isCollapsed) {
+                    filtersContent.classList.remove('collapsed');
+                    toggleIcon.style.transform = 'rotate(0deg)';
+                } else {
+                    filtersContent.classList.add('collapsed');
+                    toggleIcon.style.transform = 'rotate(-90deg)';
+                }
             });
         }
     }
@@ -3165,13 +3176,31 @@ class FCVDashboard {
 
         indicator.innerHTML = `
             <div id='indicator-con' class="indicator-content">
-                <span class="indicator-icon">🔍</span>
-                <span class="indicator-text">${count} filtro${count > 1 ? 's' : ''} ativo${count > 1 ? 's' : ''}</span>
+                <div class="indicator-header">
+                    <div class="indicator-info">
+                        <span class="indicator-icon">🔍</span>
+                        <span class="indicator-text">${count} filtro${count > 1 ? 's' : ''} ativo${count > 1 ? 's' : ''}</span>
+                    </div>
+                    <button id="clearFiltersBtn" class="clear-filters-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Limpar Filtros
+                    </button>
+                </div>
                 <div class="active-filters-list">
                     ${activeFiltersList.map(filter => `<span class="filter-tag">${filter}</span>`).join('')}
                 </div>
             </div>
         `;
+        
+        // Adicionar evento ao botão de limpar filtros
+        const clearBtn = document.getElementById('clearFiltersBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => this.clearFilters());
+        }
 
         const checkboxFilterSelect = document.getElementById('checkbox-filter-select');
 
