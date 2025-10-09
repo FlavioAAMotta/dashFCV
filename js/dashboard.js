@@ -277,9 +277,10 @@ class FCVDashboard {
 
         const formatsortedYears = sortedYears.filter(s => s >= 2010 & s < 2025);
         // Usando Lodash - ordenar em ordem crescente (do mais antigo para o mais recente)
+        const orderedYears = formatsortedYears.sort((a, b) => parseInt(a) - parseInt(b));
         dashboardData.temporal = {
-            years: formatsortedYears.map(year => parseInt(year)).sort((a, b) => a - b),
-            cases: formatsortedYears.sort((a, b) => parseInt(a) - parseInt(b)).map(year => temporalCounts[year])
+            years: orderedYears.map(year => parseInt(year)),
+            cases: orderedYears.map(year => temporalCounts[year])
         };
 
         const entries = Object.entries(
