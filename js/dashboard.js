@@ -201,7 +201,6 @@ class FCVDashboard {
             }
             this.brasilGeoJSON = geoJsonData;
 
-
             this.hideLoading();
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
@@ -2285,24 +2284,44 @@ class FCVDashboard {
 
         const exportBg = this.createBg();
 
-        // Cores específicas para estadiamento
+        // Mapear labels: "Sem Informação" vira "Vivo" visualmente
+        const labelMap = {
+            'Sem Informação': 'Vivo'
+        };
+
+        // Processar labels e valores para combinar "Vivo" com "Sem Informação"
+        const processedData = {};
+        this.data.numberObits.labels.forEach((label, index) => {
+            const displayLabel = labelMap[label] || label;
+            const value = this.data.numberObits.values[index];
+            
+            if (processedData[displayLabel]) {
+                processedData[displayLabel] += value;
+            } else {
+                processedData[displayLabel] = value;
+            }
+        });
+
+        const displayLabels = Object.keys(processedData);
+        const displayValues = Object.values(processedData);
+
+        // Cores específicas para óbitos
         const stagingColors = {
             'Vivo': '#88E788',
             'Óbito por Câncer': '#FF2C2C',
-            'Óbito por Outras Causas': '#ffa500',
-            'Sem Informação': '#e9ecef'
+            'Óbito por Outras Causas': '#ffa500'
         };
 
-        const colors = this.data.numberObits.labels.map(label => stagingColors[label] || this.colors.primary);
+        const colors = displayLabels.map(label => stagingColors[label] || this.colors.primary);
 
         const numberObits = this.charts.numberObits = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: this.data.numberObits.labels,
+                labels: displayLabels,
                 datasets: [
                     {
                         label: 'Óbitos',
-                        data: this.data.numberObits.values,
+                        data: displayValues,
                         backgroundColor: colors,
                         borderColor: '#ffffff',
                         borderWidth: 1,
@@ -2326,7 +2345,7 @@ class FCVDashboard {
                         borderWidth: 1,
                         cornerRadius: 8,
                         callbacks: {
-                            label: (context) => `${context.dataset.label}: ${context.parsed.y.toLocaleString('pt-BR')} casos`
+                            label: (context) => `${context.label}: ${context.parsed.y.toLocaleString('pt-BR')} casos`
                         }
                     }
                 },
@@ -2942,17 +2961,37 @@ class FCVDashboard {
         }
 
         if (this.charts.numberObits) {
-            this.charts.numberObits.data.labels = dataToUse.numberObits.labels;
-            this.charts.numberObits.data.datasets[0].data = dataToUse.numberObits.values;
-            // Atualizar cores se necessário (se a paleta mudar dinamicamente)
-            // Cores específicas para estadiamento
+            // Mapear labels: "Sem Informação" vira "Vivo" visualmente
+            const labelMap = {
+                'Sem Informação': 'Vivo'
+            };
+
+            // Processar labels e valores para combinar "Vivo" com "Sem Informação"
+            const processedData = {};
+            dataToUse.numberObits.labels.forEach((label, index) => {
+                const displayLabel = labelMap[label] || label;
+                const value = dataToUse.numberObits.values[index];
+                
+                if (processedData[displayLabel]) {
+                    processedData[displayLabel] += value;
+                } else {
+                    processedData[displayLabel] = value;
+                }
+            });
+
+            const displayLabels = Object.keys(processedData);
+            const displayValues = Object.values(processedData);
+
+            this.charts.numberObits.data.labels = displayLabels;
+            this.charts.numberObits.data.datasets[0].data = displayValues;
+            
+            // Cores específicas para óbitos
             const stagingColors = {
                 'Vivo': '#88E788',
                 'Óbito por Câncer': '#FF2C2C',
-                'Óbito por Outras Causas': '#ffa500',
-                'Sem Informação': '#e9ecef'
+                'Óbito por Outras Causas': '#ffa500'
             };
-            this.charts.numberObits.data.datasets[0].backgroundColor = dataToUse.numberObits.labels.map(label => stagingColors[label] || this.colors.primary);
+            this.charts.numberObits.data.datasets[0].backgroundColor = displayLabels.map(label => stagingColors[label] || this.colors.primary);
             this.charts.numberObits.update('none');
         }
 
