@@ -808,12 +808,12 @@ class FCVDashboard {
 
         // Pacientes masculinos
         this.animateNumber('malePatients', overview.total_male);
-        document.getElementById('malePercentage').textContent = `${overview.male_percentage}%`;
+        // document.getElementById('malePercentage').textContent = `${overview.male_percentage}%`;
         // document.getElementById('maleProgress').style.width = `${overview.male_percentage}%`;
 
         // Pacientes femininos
         this.animateNumber('femalePatients', overview.total_female);
-        document.getElementById('femalePercentage').textContent = `${overview.female_percentage}%`;
+        // document.getElementById('femalePercentage').textContent = `${overview.female_percentage}%`;
         // document.getElementById('femaleProgress').style.width = `${overview.female_percentage}%`;
 
         // Idade média
