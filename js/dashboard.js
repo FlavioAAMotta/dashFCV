@@ -148,7 +148,6 @@ class FCVDashboard {
             }
             this.data = await jsonResponse.json();
 
-
             // Carregar dados do CSV com cache via IndexedDB
             let cachedCsv = await this.loadFromIndexedDB("dadosCSV");
 
@@ -216,6 +215,9 @@ class FCVDashboard {
             this.totalNewCases2024 = cases2024 > 0 ? cases2024 : cases2023;
             console.log('Total de casos 2024 (fixo):', this.totalNewCases2024);
 
+            // Processar dados dos novos gráficos analíticos
+            this.processAdvancedAnalyticsData();
+
             this.hideLoading();
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
@@ -224,6 +226,35 @@ class FCVDashboard {
         }
     }
 
+    // Processar dados do gráfico de estadiamento temporal
+    processAdvancedAnalyticsData() {
+        console.log('Processando dados do gráfico de estadiamento temporal...');
+        
+        // Estadiamento Temporal - Agrupar por ano e estadiamento (2010-2024)
+        const estadiamentoTemporal = {};
+        const allYears = _.sortBy(_.uniq(_.map(this.rawData, 'ANODIAG')));
+        const estadiamentoYears = allYears.filter(year => year >= 2010 && year <= 2024).map(year => parseInt(year));
+        const stages = ['I', 'II', 'III', 'IV'];
+        
+        estadiamentoYears.forEach(year => {
+            estadiamentoTemporal[year] = {};
+            stages.forEach(stage => {
+                estadiamentoTemporal[year][stage] = this.rawData.filter(d => 
+                    d.ANODIAG == year && d.ESTADIAM === stage
+                ).length;
+            });
+        });
+        
+        this.data.estadiamento_temporal = {
+            years: estadiamentoYears,
+            I: estadiamentoYears.map(year => estadiamentoTemporal[year].I || 0),
+            II: estadiamentoYears.map(year => estadiamentoTemporal[year].II || 0),
+            III: estadiamentoYears.map(year => estadiamentoTemporal[year].III || 0),
+            IV: estadiamentoYears.map(year => estadiamentoTemporal[year].IV || 0)
+        };
+
+        console.log('Dados do estadiamento temporal processados (2010-2024):', this.data.estadiamento_temporal);
+    }
 
     // Novo método para processar os dados brutos e gerar o objeto dashboardData
     processRawData(processedData) {
@@ -855,7 +886,6 @@ class FCVDashboard {
         this.createRiskFactorsChart();
         this.createOccupationsChart();
         this.createRiskFactorsAlcoholChart()
-        this.createTreatmentChart();
         this.populateCitiesTable();
         this.createEstadiamChart();
         this.createObitsChart();
@@ -864,6 +894,9 @@ class FCVDashboard {
         this.createMaritalStatusChart();
         this.createFamilyHistoryChart();
         this.createGeograficChart();
+        
+        // Novo gráfico analítico
+        this.createEstadiamentoTemporalChart();
     }
 
     createTemporalChart() {
@@ -2224,104 +2257,6 @@ class FCVDashboard {
         }
     }
 
-    createTreatmentChart() {
-        const ctx = document.getElementById('treatmentChart').getContext('2d');
-
-        const exportBg = this.createBg();
-
-        const treatment = this.charts.treatment_status = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: this.data.treatment_status.labels,
-                datasets: [
-                    {
-                        label: 'Tratamento Status',
-                        data: this.data.treatment_status.values,
-                        backgroundColor: this.generateColorPalette(this.data.treatment_status.labels.length),
-                        borderColor: this.generateColorPalette(this.data.treatment_status.labels.length),
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        hoverBackgroundColor: this.generateColorPalette(this.data.treatment_status.labels.length).map(color =>
-                            color.replace('0.8', '1')
-                        )
-                    }]
-            },
-            plugins: [exportBg],
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        titleColor: '#ffffff',
-                        bodyColor: '#ffffff',
-                        borderColor: this.colors.secondary,
-                        borderWidth: 1,
-                        cornerRadius: 8,
-                        callbacks: {
-                            label: (context) => {
-                                const dataset = context.chart.data.datasets[0].data;
-                                const total = dataset.reduce((a, b) => a + b, 0);
-                                const value = context.parsed.x;
-                                const percent = ((value / total) * 100).toFixed(1);
-                                return `${value.toLocaleString('pt-BR')} casos (${percent}%)`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            color: this.colors.accent.gray,
-                            font: { size: 12 }
-                        }
-                    },
-                    y: {
-                        grid: { display: false },
-                        ticks: {
-                            color: this.colors.accent.gray,
-                            font: { size: 12 },
-                            callback: function (value, index, ticks) {
-                                const label = this.getLabelForValue(value);
-                                // Se o nome tiver mais que 30 caracteres, corta e adiciona "..."
-                                return label.length > 20 ? label.substring(0, 20) + "..." : label;
-                            }
-                        }
-                    },
-                    y1: { // eixo extra à direita (dinâmico)
-                        position: 'right',
-                        ticks: {
-                            callback: function (_, index, ticks) {
-                                const chart = this.chart;
-                                const dataset = chart.data.datasets[0].data;
-                                const total = dataset.reduce((a, b) => a + b, 0);
-                                const value = dataset[index];
-                                if (!value || total === 0) return '';
-                                return ((value / total) * 100).toFixed(1) + '%';
-                            },
-                            color: this.colors.accent.gray,
-                            font: { size: 12 }
-                        },
-                        grid: { drawOnChartArea: false }
-                    }
-                }
-            }
-        });
-        // botão de download
-        this.setupDownloadButton('downloadTreatment', treatment, 'gráfico-Status-de-Tratamento.png');
-
-        this.filterDataByCharSelection(ctx, treatment, 'stateTratament');
-
-    }
     createObitsChart() {
         const ctx = document.getElementById('obitsChart').getContext('2d');
 
@@ -3342,6 +3277,88 @@ class FCVDashboard {
             
         }
     }
+
+    // ===== NOVOS GRÁFICOS ANALÍTICOS =====
+
+    createEstadiamentoTemporalChart() {
+        const ctx = document.getElementById('estadiamentoTemporalChart').getContext('2d');
+        const exportBg = this.createBg();
+
+        const chart = this.charts.estadiamento_temporal = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: this.data.estadiamento_temporal.years,
+                datasets: [
+                    {
+                        label: 'Estágio I',
+                        data: this.data.estadiamento_temporal.I,
+                        backgroundColor: 'rgba(46, 138, 135, 0.8)',
+                        borderColor: 'rgba(46, 138, 135, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Estágio II',
+                        data: this.data.estadiamento_temporal.II,
+                        backgroundColor: 'rgba(0, 149, 218, 0.8)',
+                        borderColor: 'rgba(0, 149, 218, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Estágio III',
+                        data: this.data.estadiamento_temporal.III,
+                        backgroundColor: 'rgba(239, 188, 51, 0.8)',
+                        borderColor: 'rgba(239, 188, 51, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Estágio IV',
+                        data: this.data.estadiamento_temporal.IV,
+                        backgroundColor: 'rgba(180, 50, 91, 0.8)',
+                        borderColor: 'rgba(180, 50, 91, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            plugins: [exportBg],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)',
+                            drawBorder: false
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)',
+                            drawBorder: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff'
+                    }
+                }
+            }
+        });
+
+        this.setupDownloadButton('downloadEstadiamentoTemporal', chart, 'estadiamento-temporal.png');
+    }
+
 
 }
 
