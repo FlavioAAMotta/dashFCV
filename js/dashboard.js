@@ -2855,7 +2855,7 @@ class FCVDashboard {
                 .sort((a, b) => a.year - b.year);
 
             this.charts.temporal.data.labels = sortedData.map(d => d.year);
-            this.charts.temporal.data.datasets[0].data = sortedData.map(d => d.cases);
+            this.charts.temporal.data.datasets[0].data = sortedData.map(d => d.cases).reverse();
             this.charts.temporal.update('none'); // Atualizar sem animação
         }
 
