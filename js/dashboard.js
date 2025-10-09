@@ -269,10 +269,10 @@ class FCVDashboard {
         const sortedYears = _.sortBy(Object.keys(temporalCounts), year => parseInt(year));
 
         const formatsortedYears = sortedYears.filter(s => s >= 2010 & s < 2025);
-        // Usando Lodash
+        // Usando Lodash - ordenar em ordem crescente (do mais antigo para o mais recente)
         dashboardData.temporal = {
-            years: formatsortedYears.map(year => parseInt(year)),
-            cases: formatsortedYears.map(year => temporalCounts[year])
+            years: formatsortedYears.map(year => parseInt(year)).sort((a, b) => a - b),
+            cases: formatsortedYears.sort((a, b) => parseInt(a) - parseInt(b)).map(year => temporalCounts[year])
         };
 
         const entries = Object.entries(
@@ -836,13 +836,21 @@ class FCVDashboard {
 
         const exportBg = this.createBg();
 
+        // Garantir que os anos estejam em ordem crescente (do mais antigo para o mais recente)
+        const sortedData = this.data.temporal.years
+            .map((year, index) => ({ year, cases: this.data.temporal.cases[index] }))
+            .sort((a, b) => a.year - b.year);
+
+        const sortedYears = sortedData.map(d => d.year);
+        const sortedCases = sortedData.map(d => d.cases);
+
         const temporalChart = this.charts.temporal = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: this.data.temporal.years,
+                labels: sortedYears,
                 datasets: [{
                     label: 'Casos por Ano',
-                    data: this.data.temporal.cases,
+                    data: sortedCases,
                     borderColor: this.colors.secondary,
                     backgroundColor: this.createGradient(ctx, this.colors.gradients.primary),
                     borderWidth: 3,
@@ -2806,8 +2814,13 @@ class FCVDashboard {
 
         // Atualizar gráfico temporal
         if (this.charts.temporal) {
-            this.charts.temporal.data.labels = dataToUse.temporal.years;
-            this.charts.temporal.data.datasets[0].data = dataToUse.temporal.cases;
+            // Garantir que os anos estejam em ordem crescente
+            const sortedData = dataToUse.temporal.years
+                .map((year, index) => ({ year, cases: dataToUse.temporal.cases[index] }))
+                .sort((a, b) => a.year - b.year);
+
+            this.charts.temporal.data.labels = sortedData.map(d => d.year);
+            this.charts.temporal.data.datasets[0].data = sortedData.map(d => d.cases);
             this.charts.temporal.update('none'); // Atualizar sem animação
         }
 
