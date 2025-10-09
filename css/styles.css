@@ -455,7 +455,7 @@ body {
 
 /* Métricas */
 .metrics-section {
-    padding: 60px 0 40px 0;
+    padding: 40px 0 30px 0;
 }
 
 .metrics-grid {
@@ -602,7 +602,7 @@ download-icon
 .geographic-section,
 .histology-section,
 .clinical-section {
-    padding: 40px 0;
+    padding: 30px 0;
 }
 
 .charts-grid,
@@ -611,7 +611,7 @@ download-icon
 .clinical-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-    gap: 32px;
+    gap: 24px;
 }
 
 .histology-grid {
@@ -627,7 +627,7 @@ download-icon
 .chart-card {
     background: var(--white);
     border-radius: 16px;
-    padding: 24px;
+    padding: 20px;
     box-shadow: var(--shadow-md);
     transition: var(--transition-normal);
     border: 1px solid rgba(0, 0, 0, 0.05);
@@ -640,15 +640,14 @@ download-icon
 .chart-card-estadiam{
     background: var(--white);
     border-radius: 16px;
-    padding: 24px; /* Alterado de 4% para um valor fixo */
+    padding: 20px;
     box-shadow: var(--shadow-md);
     transition: var(--transition-normal);
     border: 1px solid rgba(0, 0, 0, 0.05);
-    box-sizing: border-box; /* Garante que padding e borda sejam incluídos no tamanho total */
-    min-height: 600px; /* Define uma altura mínima para o cartão */
-    /* Define uma altura máxima para o cartão */
-    display: flex; /* Habilita o Flexbox */
-    flex-direction: column; /* Organiza os itens em coluna */
+    box-sizing: border-box;
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
 }
 .chart-card-estadiam:hover {
     box-shadow: var(--shadow-lg);
@@ -674,22 +673,21 @@ download-icon
 .chart-card-geografic{
     background: var(--white);
     border-radius: 16px;
-    padding: 24px; /* Alterado de 4% para um valor fixo */
+    padding: 20px;
     box-shadow: var(--shadow-md);
     transition: var(--transition-normal);
     border: 1px solid rgba(0, 0, 0, 0.05);
-    box-sizing: border-box; /* Garante que padding e borda sejam incluídos no tamanho total */
-    min-height: 600px; /* Define uma altura mínima para o cartão */
-    /* Define uma altura máxima para o cartão */
-    display: flex; /* Habilita o Flexbox */
-    flex-direction: column; /* Organiza os itens em coluna */
+    box-sizing: border-box;
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
 }
 
 .chart-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
     border-bottom: 2px solid var(--light-gray);
 }
 
@@ -707,12 +705,12 @@ download-icon
 
 .chart-container {
     position: relative;
-    height: 380px;
+    height: 280px;
     width: 100%;
 }
 
 .table-container {
-    max-height: 350px;
+    max-height: 280px;
     overflow-y: auto;
 }
 
