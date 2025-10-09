@@ -4,6 +4,7 @@ class FCVDashboard {
         this.data = null; // Dados processados do dashboard
         this.rawData = null; // Dados brutos do CSV
         this.filteredData = null; // Dados processados após a aplicação de filtros
+        this.totalNewCases2024 = 0; // Total de casos de 2024 (fixo, não afetado por filtros)
         this.charts = {};
         this.filters = {
             period: [],
@@ -201,6 +202,20 @@ class FCVDashboard {
             }
             this.brasilGeoJSON = geoJsonData;
 
+            // Calcular o total de casos de 2024 dos dados brutos (fixo, não afetado por filtros)
+            const cases2024 = this.rawData.filter(d => {
+                const ano = d.ANODIAG ? parseInt(d.ANODIAG) : 0;
+                return ano === 2024;
+            }).length;
+            
+            const cases2023 = this.rawData.filter(d => {
+                const ano = d.ANODIAG ? parseInt(d.ANODIAG) : 0;
+                return ano === 2023;
+            }).length;
+            
+            this.totalNewCases2024 = cases2024 > 0 ? cases2024 : cases2023;
+            console.log('Total de casos 2024 (fixo):', this.totalNewCases2024);
+
             this.hideLoading();
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
@@ -211,7 +226,7 @@ class FCVDashboard {
 
 
     // Novo método para processar os dados brutos e gerar o objeto dashboardData
-    processRawData(processedData) {
+    processRawData(processedData, fixedNewCases2024 = null) {
 
         const dashboardData = {};
 
@@ -261,14 +276,16 @@ class FCVDashboard {
             average_age: average_age,
             period_start: years[0],
             period_end: years[years.length - 1],
-            // Pega sempre os casos de 2024
-            current_year_cases: processedData.filter(d => {
-                const ano = parseInt(d.ANODIAG);
-                return ano === 2024;
-            }).length || processedData.filter(d => {
-                const ano = parseInt(d.ANODIAG);
-                return ano === 2023;
-            }).length
+            // Pega sempre os casos de 2024 (usa valor fixo se fornecido, senão calcula)
+            current_year_cases: fixedNewCases2024 !== null ? fixedNewCases2024 : (
+                processedData.filter(d => {
+                    const ano = parseInt(d.ANODIAG);
+                    return ano === 2024;
+                }).length || processedData.filter(d => {
+                    const ano = parseInt(d.ANODIAG);
+                    return ano === 2023;
+                }).length
+            )
         };
 
         // 2. Evolução temporal
@@ -779,8 +796,8 @@ class FCVDashboard {
         // Total de pacientes
         this.animateNumber('totalPatients', overview.total_patients);
 
-        // Novos casos
-        this.animateNumber('newCases', overview.current_year_cases);
+        // Novos casos (sempre usa o valor fixo de 2024, não afetado por filtros)
+        this.animateNumber('newCases', this.totalNewCases2024);
 
         this.animateNumber('avgInitialState', overview.avg_inicial_states);
 
@@ -861,7 +878,7 @@ class FCVDashboard {
             .sort((a, b) => a.year - b.year);
 
         const sortedYears = sortedData.map(d => d.year);
-        const sortedCases = sortedData.map(d => d.cases);
+        const sortedCases = sortedData.map(d => d.cases).reverse();
 
         const temporalChart = this.charts.temporal = new Chart(ctx, {
             type: 'line',
@@ -2814,7 +2831,7 @@ class FCVDashboard {
         }
 
         // Processar os dados brutos filtrados para gerar o objeto dashboardData filtrado
-        this.filteredData = this.processRawData(filteredRawData);
+        this.filteredData = this.processRawData(filteredRawData, this.totalNewCases2024);
 
         // Armazenar no cache
         this.filteredDataCache = {
