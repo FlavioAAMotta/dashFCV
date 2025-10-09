@@ -226,7 +226,7 @@ class FCVDashboard {
 
 
     // Novo método para processar os dados brutos e gerar o objeto dashboardData
-    processRawData(processedData, fixedNewCases2024 = null) {
+    processRawData(processedData) {
 
         const dashboardData = {};
 
@@ -276,16 +276,14 @@ class FCVDashboard {
             average_age: average_age,
             period_start: years[0],
             period_end: years[years.length - 1],
-            // Pega sempre os casos de 2024 (usa valor fixo se fornecido, senão calcula)
-            current_year_cases: fixedNewCases2024 !== null ? fixedNewCases2024 : (
-                processedData.filter(d => {
-                    const ano = parseInt(d.ANODIAG);
-                    return ano === 2024;
-                }).length || processedData.filter(d => {
-                    const ano = parseInt(d.ANODIAG);
-                    return ano === 2023;
-                }).length
-            )
+            // Calcula os casos de 2024 dos dados processados (afetado por filtros)
+            current_year_cases: processedData.filter(d => {
+                const ano = parseInt(d.ANODIAG);
+                return ano === 2024;
+            }).length || processedData.filter(d => {
+                const ano = parseInt(d.ANODIAG);
+                return ano === 2023;
+            }).length
         };
 
         // 2. Evolução temporal
@@ -796,8 +794,9 @@ class FCVDashboard {
         // Total de pacientes
         this.animateNumber('totalPatients', overview.total_patients);
 
-        // Novos casos (sempre usa o valor fixo de 2024, não afetado por filtros)
-        this.animateNumber('newCases', this.totalNewCases2024);
+        // Novos casos (usa os dados filtrados se houver filtros ativos, senão usa o valor fixo)
+        const newCasesValue = this.filteredData ? overview.current_year_cases : this.totalNewCases2024;
+        this.animateNumber('newCases', newCasesValue);
 
         this.animateNumber('avgInitialState', overview.avg_inicial_states);
 
@@ -2831,7 +2830,7 @@ class FCVDashboard {
         }
 
         // Processar os dados brutos filtrados para gerar o objeto dashboardData filtrado
-        this.filteredData = this.processRawData(filteredRawData, this.totalNewCases2024);
+        this.filteredData = this.processRawData(filteredRawData);
 
         // Armazenar no cache
         this.filteredDataCache = {
