@@ -372,7 +372,7 @@ class FCVDashboard {
             values: tumor_types_general.map(item => item[1])
         };
 
-        // Regiões (para filtro) - Filtrar valores vazios
+        // Procedências (para filtro) - Filtrar valores vazios
         const regions = _.sortBy(
             _.toPairs(
                 _.countBy(
@@ -721,7 +721,7 @@ class FCVDashboard {
             options: generalFormat
         });
 
-        // 🔹 Regiões — ordem alfabética
+        // 🔹 Procedências — ordem alfabética
         const regionFormat = this.data.regions.label
             .filter(lbl => lbl && lbl.trim() !== '') // Remover valores vazios ou com apenas espaços
             .map(lbl => ({ label: lbl, value: lbl }))
@@ -732,7 +732,7 @@ class FCVDashboard {
             multiple: true,
             search: true,
             showSelectedOptionsFirst: true,
-            placeholder: 'Todas as Regiões',
+            placeholder: 'Todas as Procedências',
             additionalClasses: 'custom-wrapper',
             searchPlaceholderText: 'Pesquisar...',
             noSearchResultsText: 'Sem Resultados',
