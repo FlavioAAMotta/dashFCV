@@ -1545,7 +1545,17 @@ class FCVDashboard {
 
         const exportBg = this.createBg();
 
-        const labels = this.data.occupations.labels;
+        // Função para converter texto para Pascal Case (Primeira Letra de Cada Palavra Maiúscula)
+        const toPascalCase = (text) => {
+            if (!text) return text;
+            return text.toLowerCase()
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        };
+
+        // Aplicar Pascal Case nos labels
+        const labels = this.data.occupations.labels.map(label => toPascalCase(label));
 
         const occupations = this.charts.occupations = new Chart(ctx, {
             type: 'bar', // Mudança de 'doughnut' para 'bar'
@@ -2828,7 +2838,10 @@ class FCVDashboard {
                 .sort((a, b) => a.year - b.year);
 
             this.charts.temporal.data.labels = sortedData.map(d => d.year);
-            this.charts.temporal.data.datasets[0].data = sortedData.map(d => d.cases).reverse();
+            // Se está usando dados originais (sem filtro), aplicar reverse. Se é filtrado, não aplicar.
+            this.charts.temporal.data.datasets[0].data = this.filteredData 
+                ? sortedData.map(d => d.cases) 
+                : sortedData.map(d => d.cases).reverse();
             this.charts.temporal.update('none'); // Atualizar sem animação
         }
 
@@ -2865,7 +2878,16 @@ class FCVDashboard {
         }
 
         if (this.charts.occupations) {
-            this.charts.occupations.data.labels = dataToUse.occupations.labels;
+            // Converter labels para Pascal Case
+            const toPascalCase = (text) => {
+                if (!text) return text;
+                return text.toLowerCase()
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+            };
+            
+            this.charts.occupations.data.labels = dataToUse.occupations.labels.map(label => toPascalCase(label));
             this.charts.occupations.data.datasets[0].data = dataToUse.occupations.values;
             this.charts.occupations.update('none');
         }
