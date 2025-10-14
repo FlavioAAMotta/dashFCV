@@ -848,7 +848,7 @@ class FCVDashboard {
 
         this.animateNumber('avgInitialState', overview.avg_inicial_states);
 
-        document.getElementById('avgUnder18').textContent = overview.Percentage_Under18;
+        this.animateNumber('avgUnder18', overview.Percentage_Under18);
 
         this.animateNumber('mortalityRate', overview.mortality_rate);
 
