@@ -372,8 +372,16 @@ class FCVDashboard {
             values: tumor_types_general.map(item => item[1])
         };
 
-        // Regiões (para filtro)
-        const regions = _.sortBy(_.toPairs(_.countBy(processedData, 'PROCEDEN')), ([label, value]) => label);
+        // Regiões (para filtro) - Filtrar valores vazios
+        const regions = _.sortBy(
+            _.toPairs(
+                _.countBy(
+                    processedData.filter(d => d.PROCEDEN && d.PROCEDEN.trim() !== ''), 
+                    'PROCEDEN'
+                )
+            ), 
+            ([label, value]) => label
+        );
         dashboardData.regions = {
             label: regions.map(item => item[0]),
             value: regions.map(item => item[1])
@@ -715,6 +723,7 @@ class FCVDashboard {
 
         // 🔹 Regiões — ordem alfabética
         const regionFormat = this.data.regions.label
+            .filter(lbl => lbl && lbl.trim() !== '') // Remover valores vazios ou com apenas espaços
             .map(lbl => ({ label: lbl, value: lbl }))
             .sort((a, b) => a.label.localeCompare(b.label, 'pt', { sensitivity: 'base' }));
 
