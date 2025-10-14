@@ -647,25 +647,7 @@ class FCVDashboard {
             this.filters.ageMax = e.target.value;
             this.applyFilters();
         });
-
-        // Toggle dos filtros
-        const toggleBtn = document.getElementById('toggleFilters');
-        const filtersContent = document.getElementById('filtersContent');
-        const toggleIcon = document.getElementById('toggleIcon');
-        
-        if (toggleBtn && filtersContent && toggleIcon) {
-            toggleBtn.addEventListener('click', () => {
-                const isCollapsed = filtersContent.classList.contains('collapsed');
-                
-                if (isCollapsed) {
-                    filtersContent.classList.remove('collapsed');
-                    toggleIcon.style.transform = 'rotate(0deg)';
-                } else {
-                    filtersContent.classList.add('collapsed');
-                    toggleIcon.style.transform = 'rotate(-90deg)';
-                }
-            });
-        }
+        // Toggle dos filtros removido - funcionalidade agora no cabeçalho
     }
 
     populateFilters() {
@@ -3396,28 +3378,20 @@ class FCVDashboard {
 
 }
 
-const button = document.getElementById('button-config');
-const divConfig = document.getElementById('div-config');
-
+// Funcionalidade da engrenagem removida - agora no cabeçalho de filtros
 const filters = document.getElementById('filters-section');
 const checkboxFilter = document.getElementById('checkbox-filter');
 
-button.addEventListener('click', () => {
-    if (divConfig.classList.contains('config-div--open')) {
-        divConfig.classList.remove('config-div--open')
-    } else {
-        divConfig.classList.add('config-div--open');
-    }
-})
-
-checkboxFilter.addEventListener('change', () => {
-    if (checkboxFilter.checked) {
-        filters.style.position = 'static'
-    } else {
-        filters.style.position = 'sticky'
-
-    }
-})
+// Checkbox para ocultar filtros (sticky)
+if (checkboxFilter) {
+    checkboxFilter.addEventListener('change', () => {
+        if (checkboxFilter.checked) {
+            filters.style.position = 'static';
+        } else {
+            filters.style.position = 'sticky';
+        }
+    });
+}
 
 // Configurações globais do Chart.js
 Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
