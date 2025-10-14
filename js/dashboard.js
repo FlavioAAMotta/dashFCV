@@ -255,6 +255,8 @@ class FCVDashboard {
     // Novo método para processar os dados brutos e gerar o objeto dashboardData
     processRawData(processedData) {
 
+        const unwantedValues = [null, undefined, '', 'undefined', 'Não Informado'];
+
         const dashboardData = {};
 
         // 1. Métricas gerais (overview)
@@ -419,23 +421,41 @@ class FCVDashboard {
         });
 
         // 4. Distribuição por faixa etária
-        const ageGroups = _.sortBy(_.toPairs(_.countBy(processedData, 'Cortes_Idade')), ([label, value]) => parseInt(label.split('-')[0])); // Usando Lodash
+        const ageGroups = _.sortBy(
+            _.toPairs(
+                _.countBy(
+                    processedData.filter(d => !unwantedValues.includes(d.Cortes_Idade)),
+                    'Cortes_Idade'
+                )
+            ),
+            ([label, value]) => parseInt(label.split('-')[0])
+        ); // Usando Lodash
         dashboardData.age_distribution = {
             labels: ageGroups.map(item => item[0]),
             values: ageGroups.map(item => item[1])
         };
-
-        const marital_status = _.sortBy(_.toPairs(_.countBy(processedData, 'ESTCONAT')), ([label, value]) => parseInt(label.split('-')[0])); // Usando Lodash
+        const marital_status = _.sortBy(
+            _.toPairs(
+                _.countBy(processedData, d => unwantedValues.includes(d.ESTCONAT) ? 'Sem Informação' : d.ESTCONAT)
+            ), 
+            ([key, value]) => -value // Ordena pela quantidade de casos
+        );
         dashboardData.marital_status = {
             labels: marital_status.map(item => item[0]),
             values: marital_status.map(item => item[1])
         };
 
-        const family_history = _.sortBy(_.toPairs(_.countBy(processedData, 'HISTFAMC')), ([label, value]) => parseInt(label.split('-')[0])); // Usando Lodash
+        const family_history = _.sortBy(
+            _.toPairs(
+                _.countBy(processedData, d => unwantedValues.includes(d.HISTFAMC) ? 'Sem Informação' : d.HISTFAMC)
+            ), 
+            ([key, value]) => -value // Ordena pela quantidade de casos
+        );
         dashboardData.family_history = {
             labels: family_history.map(item => item[0]),
             values: family_history.map(item => item[1])
         };
+
         // 5. Fatores de risco
         dashboardData.risk_factors = {
             smoking: _.countBy(processedData, 'TABAGISM'), // Usando Lodash
@@ -498,15 +518,16 @@ class FCVDashboard {
         };
 
         // 11. Contagem de obitos
-        let obitsGroup = _.sortBy(_.toPairs(_.countBy(processedData, 'OBITO_CA')), ([key, value]) => -value); // Usando Lodash
-
+        let obitsGroup = _.sortBy(_.toPairs(_.countBy(processedData, d => d.OBITO_CA || 'Sem Informação')), ([key, value]) => -value); // Usando Lodash
         dashboardData.numberObits = {
             labels: obitsGroup.map(item => item[0]),
             values: obitsGroup.map(item => item[1])
         };
 
         // 12. Nivel de escolaridade
-        const level_education = _.sortBy(_.toPairs(_.countBy(processedData, 'INSTRUC')), ([key, value]) => -value); // Usando Lodash
+        // Remover valores indesejados antes de contar e ordenar
+        const filteredInstruc = processedData.filter(d => !unwantedValues.includes(d.INSTRUC));
+        const level_education = _.sortBy(_.toPairs(_.countBy(filteredInstruc, 'INSTRUC')), ([key, value]) => -value); // Usando Lodash
 
         // Definir a ordem desejada
         const ordemEscolaridade = [
@@ -526,8 +547,8 @@ class FCVDashboard {
             values: level_education.map(item => item[1])
         }
 
-        // Etinia
-        const race = _.sortBy(_.toPairs(_.countBy(processedData, 'RACACOR')), ([key, value]) => -value); // Usando Lodash
+        // Etnia
+        const race = _.sortBy(_.toPairs(_.countBy(processedData.filter(d => d.RACACOR !== undefined && d.RACACOR !== null && d.RACACOR !== ''), 'RACACOR')), ([key, value]) => -value); // Usando Lodash
 
         dashboardData.race = {
             labels: race.map(item => item[0]),
