@@ -779,7 +779,11 @@ class FCVDashboard {
 
         // 🔹 Faixa etária mínima — ordem crescente numérica
         const ageMinFormat = this.data.age.labels
-            .map(lbl => ({ label: lbl, value: lbl }))
+            .map(lbl => {
+                // Remover o ".0" convertendo para inteiro e depois para string
+                const cleanLabel = parseInt(lbl).toString();
+                return { label: cleanLabel, value: lbl };
+            })
             .sort((a, b) => parseInt(a.label) - parseInt(b.label));
 
         VirtualSelect.init({
@@ -798,7 +802,11 @@ class FCVDashboard {
 
         // 🔹 Faixa etária máxima — mesma ordenação
         const ageMaxFormat = this.data.age.labels
-            .map(lbl => ({ label: lbl, value: lbl }))
+            .map(lbl => {
+                // Remover o ".0" convertendo para inteiro e depois para string
+                const cleanLabel = parseInt(lbl).toString();
+                return { label: cleanLabel, value: lbl };
+            })
             .sort((a, b) => parseInt(b.label) - parseInt(a.label));
 
         VirtualSelect.init({
