@@ -253,7 +253,7 @@ body {
     box-shadow: var(--shadow-sm);
     position: sticky;
     top: 0;
-    z-index: 2000;
+    z-index: 500;
 }
 
 /* Novo cabeçalho de filtros */
@@ -266,11 +266,62 @@ body {
     border-bottom: 2px solid #e9ecef;
 }
 
+.filters-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .filters-title {
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--primary-dark);
     margin: 0;
+}
+
+/* Botão de toggle moderno */
+.toggle-filters-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.toggle-filters-btn:hover {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.toggle-filters-btn:hover .chevron-icon {
+    stroke: white;
+}
+
+.toggle-filters-btn .chevron-icon {
+    width: 18px;
+    height: 18px;
+    transition: all 0.3s ease;
+    stroke: var(--primary-blue);
+}
+
+.toggle-filters-btn:hover .chevron-icon {
+    stroke: white;
+}
+
+.toggle-filters-btn.collapsed .chevron-icon {
+    transform: rotate(180deg);
+}
+
+.toggle-filters-btn .toggle-text {
+    font-size: 0.9rem;
 }
 
 .filters-options {
@@ -306,6 +357,12 @@ body {
 
 .filters-content {
     max-height: none;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+
+.filters-content[style*="display: none"] {
+    opacity: 0;
 }
 
 .filters-grid {
@@ -662,6 +719,8 @@ download-icon
     box-shadow: var(--shadow-md);
     transition: var(--transition-normal);
     border: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 1;
 }
 
 .chart-card:hover {
@@ -1059,6 +1118,42 @@ download-icon
     }
     .filters-section{
         position: static;
+    }
+    
+    /* Ajustes no cabeçalho de filtros para mobile */
+    .filters-header-new {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .filters-header-left {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .filters-title {
+        font-size: 1.1rem;
+    }
+    
+    /* Botão mais compacto em mobile */
+    .toggle-filters-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .toggle-filters-btn .chevron-icon {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .filters-options {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .filter-checkbox-label {
+        font-size: 0.85rem;
     }
     
     .logo-section {

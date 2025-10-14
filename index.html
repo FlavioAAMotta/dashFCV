@@ -44,12 +44,16 @@
     <section id="filters-section" class="filters-section">
         <div class="container">
             <div class="filters-header-new">
-                <h3 class="filters-title">Filtros</h3>
+                <div class="filters-header-left">
+                    <h3 class="filters-title">Filtros</h3>
+                    <button id="toggle-filters-btn" class="toggle-filters-btn">
+                        <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                        <span class="toggle-text">Recolher</span>
+                    </button>
+                </div>
                 <div class="filters-options">
-                    <label class="filter-checkbox-label">
-                        <input id="checkbox-filter" type="checkbox">
-                        <span>Ocultar filtros</span>
-                    </label>
                     <label class="filter-checkbox-label">
                         <input id="checkbox-filter-select" type="checkbox">
                         <span>Ocultar filtros selecionados</span>

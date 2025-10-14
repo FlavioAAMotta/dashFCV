@@ -62,8 +62,6 @@ class FCVDashboard {
 
 
     async init() {
-        const filter = document.getElementById('filters-section')
-        filter.style.zIndex = '0'
         try {
             await this.loadData();
             this.setupEventListeners();
@@ -75,10 +73,8 @@ class FCVDashboard {
             console.error('Erro ao inicializar dashboard:', error);
             this.showError('Erro ao carregar os dados do dashboard');
         }
-        filters.style.zIndex = '2000'
 
         // Inicializa a paginação e renderiza a primeira página
-
         this.populateHistologyTable(); // Popula os dados que serão paginados
         this.setupHistologyPagination();
         this.renderHistologyPage(this.currentHistologyPage);
@@ -3439,21 +3435,6 @@ class FCVDashboard {
 
 }
 
-// Funcionalidade da engrenagem removida - agora no cabeçalho de filtros
-const filters = document.getElementById('filters-section');
-const checkboxFilter = document.getElementById('checkbox-filter');
-
-// Checkbox para ocultar filtros (sticky)
-if (checkboxFilter) {
-    checkboxFilter.addEventListener('change', () => {
-        if (checkboxFilter.checked) {
-            filters.style.position = 'static';
-        } else {
-            filters.style.position = 'sticky';
-        }
-    });
-}
-
 // Configurações globais do Chart.js
 Chart.defaults.font.family = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 Chart.defaults.font.size = 12;
@@ -3462,6 +3443,40 @@ Chart.defaults.color = '#727272';
 // Inicializar dashboard quando a página carregar
 document.addEventListener('DOMContentLoaded', () => {
     new FCVDashboard();
+    
+    // Funcionalidade do botão de toggle de filtros
+    const toggleBtn = document.getElementById('toggle-filters-btn');
+    const filtersContent = document.getElementById('filtersContent');
+    const filtersSection = document.getElementById('filters-section');
+    
+    if (toggleBtn && filtersContent && filtersSection) {
+        toggleBtn.addEventListener('click', () => {
+            const isCollapsed = toggleBtn.classList.contains('collapsed');
+            const isMobile = window.innerWidth < 768;
+            
+            if (isCollapsed) {
+                // Expandir
+                filtersContent.style.display = 'block';
+                toggleBtn.classList.remove('collapsed');
+                toggleBtn.querySelector('.toggle-text').textContent = 'Recolher';
+                
+                // Em mobile, volta para sticky
+                if (isMobile) {
+                    filtersSection.style.position = 'sticky';
+                }
+            } else {
+                // Recolher
+                filtersContent.style.display = 'none';
+                toggleBtn.classList.add('collapsed');
+                toggleBtn.querySelector('.toggle-text').textContent = 'Expandir';
+                
+                // Em mobile, remove sticky
+                if (isMobile) {
+                    filtersSection.style.position = 'static';
+                }
+            }
+        });
+    }
 });
 
 // Adicionar responsividade aos gráficos
