@@ -24,8 +24,8 @@ def process_dashboard_data():
     # Total de registros
     totalUnder18 = len(df)
 
-    # Quantos têm idade < 18
-    under18 = len(df[df['IDADE_DIAG'] < 18])
+    # Quantos têm idade < 40 (proporção de pacientes jovens)
+    under18 = len(df[df['IDADE_DIAG'] < 40])
     
     # Métricas gerais
     dashboard_data['overview'] = {

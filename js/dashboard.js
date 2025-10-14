@@ -276,8 +276,9 @@ class FCVDashboard {
                 processedData.length * 100).toFixed(1)
         );
 
+        // Proporção de pacientes com menos de 40 anos
         const Percentage_Under18 = parseFloat(
-            (processedData.filter(d => d.IDADE_DIAG < 18).length /
+            (processedData.filter(d => d.IDADE_DIAG < 40).length /
                 processedData.length * 100).toFixed(1)
         );
 
