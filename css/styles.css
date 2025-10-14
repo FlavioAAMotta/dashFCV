@@ -1118,13 +1118,20 @@ download-icon
     }
     .filters-section{
         position: static;
+        padding: 10px 0;
+    }
+    
+    .filters-section .container {
+        padding: 0 12px;
     }
     
     /* Ajustes no cabeçalho de filtros para mobile */
     .filters-header-new {
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
         align-items: flex-start;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
     }
     
     .filters-header-left {
@@ -1133,18 +1140,23 @@ download-icon
     }
     
     .filters-title {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
     
     /* Botão mais compacto em mobile */
     .toggle-filters-btn {
-        padding: 6px 12px;
-        font-size: 0.85rem;
+        padding: 4px 10px;
+        font-size: 0.8rem;
+        border-width: 1.5px;
     }
     
     .toggle-filters-btn .chevron-icon {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
+    }
+    
+    .toggle-filters-btn .toggle-text {
+        font-size: 0.8rem;
     }
     
     .filters-options {
@@ -1153,6 +1165,49 @@ download-icon
     }
     
     .filter-checkbox-label {
+        font-size: 0.8rem;
+    }
+    
+    .filter-checkbox-label input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+    
+    /* Filtros mais compactos */
+    .filters-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .filter-group {
+        margin-bottom: 0;
+    }
+    
+    .filter-group label {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+        font-weight: 600;
+    }
+    
+    /* Reduzir espaçamento dos campos de filtro */
+    .filter-group select,
+    .filter-group input {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+    
+    /* Virtual Select mais compacto em mobile */
+    .custom-wrapper .vscomp-toggle-button {
+        padding: 8px 10px;
+        min-height: 38px;
+        font-size: 0.85rem;
+    }
+    
+    .vscomp-value {
+        font-size: 0.85rem;
+    }
+    
+    .vscomp-option-text {
         font-size: 0.85rem;
     }
     
@@ -1170,11 +1225,6 @@ download-icon
     
     .filters-section {
         top: 140px;
-    }
-    
-    .filters-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
     }
     
     .indicator-header {
