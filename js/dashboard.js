@@ -269,7 +269,7 @@ class FCVDashboard {
 
 
         const mortality_rate = parseFloat(
-            (processedData.filter(d => d.OBITO_CA === 'Óbito por Câncer').length /
+            (processedData.filter(d => d.OBITO_CA !== 'Óbito por Câncer').length /
                 processedData.length * 100).toFixed(1)
         );
 

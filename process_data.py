@@ -34,7 +34,7 @@ def process_dashboard_data():
         'total_female': len(df[df['SEXO'] == 'Feminino']),
         'male_percentage': round((len(df[df['SEXO'] == 'Masculino']) / len(df)) * 100, 1),
         'female_percentage': round((len(df[df['SEXO'] == 'Feminino']) / len(df)) * 100, 1),
-        'mortality_rate': round((len(df[df['OBITO_CA'] == 'Óbito por Câncer']) / len(df['OBITO_CA'])) * 100, 1),
+        'mortality_rate': round((len(df[df['OBITO_CA'] != 'Óbito por Câncer']) / len(df['OBITO_CA'])) * 100, 1),
         'avg_inicial_states':round(len(df[(df['ESTADIAM'] == 'I') | (df['ESTADIAM'] == 'II')]) / len(df) * 100,1),
         'average_age': round(df['IDADE_DIAG'].mean(), 1),
         'period_start': int(df['ANODIAG'].min()),
