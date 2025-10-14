@@ -65,7 +65,6 @@ class FCVDashboard {
         const filter = document.getElementById('filters-section')
         filter.style.zIndex = '0'
         try {
-            console.time('meu timer');
             await this.loadData();
             this.setupEventListeners();
             this.populateFilters();
@@ -76,7 +75,6 @@ class FCVDashboard {
             console.error('Erro ao inicializar dashboard:', error);
             this.showError('Erro ao carregar os dados do dashboard');
         }
-        console.timeEnd('meu timer');
         filters.style.zIndex = '2000'
 
         // Inicializa a paginação e renderiza a primeira página
@@ -213,7 +211,9 @@ class FCVDashboard {
             }).length;
             
             this.totalNewCases2024 = cases2024 > 0 ? cases2024 : cases2023;
-            console.log('Total de casos 2024 (fixo):', this.totalNewCases2024);
+
+            // Processar dados brutos para gerar o objeto dashboardData inicial
+            this.data = this.processRawData(this.rawData);
 
             // Processar dados dos novos gráficos analíticos
             this.processAdvancedAnalyticsData();
@@ -228,8 +228,6 @@ class FCVDashboard {
 
     // Processar dados do gráfico de estadiamento temporal
     processAdvancedAnalyticsData() {
-        console.log('Processando dados do gráfico de estadiamento temporal...');
-        
         // Estadiamento Temporal - Agrupar por ano e estadiamento (2010-2024)
         const estadiamentoTemporal = {};
         const allYears = _.sortBy(_.uniq(_.map(this.rawData, 'ANODIAG')));
@@ -252,8 +250,6 @@ class FCVDashboard {
             III: estadiamentoYears.map(year => estadiamentoTemporal[year].III || 0),
             IV: estadiamentoYears.map(year => estadiamentoTemporal[year].IV || 0)
         };
-
-        console.log('Dados do estadiamento temporal processados (2010-2024):', this.data.estadiamento_temporal);
     }
 
     // Novo método para processar os dados brutos e gerar o objeto dashboardData
@@ -268,8 +264,15 @@ class FCVDashboard {
         const years = _.sortBy(_.uniq(_.map(processedData, 'ANODIAG')));// Usando Lodash
 
 
-        const mortality_rate = parseFloat(
+        // Taxa de Sobrevida: pacientes que NÃO morreram de câncer
+        const survival_rate = parseFloat(
             (processedData.filter(d => d.OBITO_CA !== 'Óbito por Câncer').length /
+                processedData.length * 100).toFixed(1)
+        );
+        
+        // Taxa de Mortalidade: pacientes que morreram de câncer
+        const mortality_rate = parseFloat(
+            (processedData.filter(d => d.OBITO_CA === 'Óbito por Câncer').length /
                 processedData.length * 100).toFixed(1)
         );
 
@@ -300,7 +303,7 @@ class FCVDashboard {
             total_male: total_male,
             total_female: total_female,
             Percentage_Under18: Percentage_Under18,
-            mortality_rate: mortality_rate,
+            mortality_rate: survival_rate,  // Exibe a taxa de sobrevida (nome do campo mantido por compatibilidade)
             avg_inicial_states: avg_inicial_states,
             male_percentage: parseFloat(((total_male / total_patients) * 100).toFixed(1)),
             female_percentage: parseFloat(((total_female / total_patients) * 100).toFixed(1)),
@@ -359,15 +362,45 @@ class FCVDashboard {
             values: tumor_types_specific.map(item => item[1])
         };
 
+        // Tipos de tumor gerais (para filtro)
+        const tumor_types_general = _.sortBy(_.toPairs(_.countBy(processedData, 'LocalTumorcompacto')), ([label, value]) => label);
+        dashboardData.tumor_types_general = {
+            labels: tumor_types_general.map(item => item[0]),
+            values: tumor_types_general.map(item => item[1])
+        };
+
+        // Regiões (para filtro)
+        const regions = _.sortBy(_.toPairs(_.countBy(processedData, 'PROCEDEN')), ([label, value]) => label);
+        dashboardData.regions = {
+            label: regions.map(item => item[0]),
+            value: regions.map(item => item[1])
+        };
+
+        // Idades únicas (para filtro)
+        const uniqueAges = _.sortBy(_.uniq(processedData.map(d => d.IDADE_DIAG).filter(age => age != null && age !== '')));
+        dashboardData.age = {
+            labels: uniqueAges
+        };
+
+        // Cidades (para filtro)
+        const citys = _.sortBy(_.toPairs(_.countBy(processedData, 'CIDADE')), ([label, value]) => label);
+        dashboardData.citys = {
+            labels: citys.map(item => item[0]),
+            values: citys.map(item => item[1])
+        };
+
         const specificFormat = dashboardData.tumor_types_specific.labels
             .map(lbl => ({ label: lbl, value: lbl }))
             .sort((a, b) => a.label.localeCompare(b.label, 'pt', { sensitivity: 'base' }));
 
         //Atualiza o select
         const tumorSelect = document.querySelector('#tumorFilterSpecific');
-        const virtualSelectInstance = tumorSelect.virtualSelect;
+        const virtualSelectInstance = tumorSelect?.virtualSelect;
 
-        virtualSelectInstance.destroy()
+        // Só destrói se já existir uma instância
+        if (virtualSelectInstance) {
+            virtualSelectInstance.destroy();
+        }
         
         VirtualSelect.init({
             ele: '#tumorFilterSpecific',
@@ -573,16 +606,17 @@ class FCVDashboard {
         document.getElementById('tumorFilterGeneral').addEventListener('change', (e) => {
             this.filters.tumorGeneral = e.target.value;
             if (Array.isArray(e.target.value) && e.target.value.length === 0) {
-                
-                console.log('ssss')
                 const specificFormat = this.data.tumor_types_specific.labels
                     .map(lbl => ({ label: lbl, value: lbl }))
                     .sort((a, b) => a.label.localeCompare(b.label, 'pt', { sensitivity: 'base' }));
             
                 const tumorSelect = document.querySelector('#tumorFilterSpecific');
-                const virtualSelectInstance = tumorSelect.virtualSelect;
+                const virtualSelectInstance = tumorSelect?.virtualSelect;
             
-                virtualSelectInstance.destroy();
+                // Só destrói se já existir uma instância
+                if (virtualSelectInstance) {
+                    virtualSelectInstance.destroy();
+                }
 
                 VirtualSelect.init({
                     ele: '#tumorFilterSpecific',
