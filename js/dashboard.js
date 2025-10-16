@@ -211,9 +211,6 @@ class FCVDashboard {
             // Processar dados brutos para gerar o objeto dashboardData inicial
             this.data = this.processRawData(this.rawData);
 
-            // Processar dados dos novos gráficos analíticos
-            this.processAdvancedAnalyticsData();
-
             this.hideLoading();
         } catch (error) {
             console.error('Erro ao carregar dados:', error);
@@ -222,31 +219,6 @@ class FCVDashboard {
         }
     }
 
-    // Processar dados do gráfico de estadiamento temporal
-    processAdvancedAnalyticsData() {
-        // Estadiamento Temporal - Agrupar por ano e estadiamento (2010-2024)
-        const estadiamentoTemporal = {};
-        const allYears = _.sortBy(_.uniq(_.map(this.rawData, 'ANODIAG')));
-        const estadiamentoYears = allYears.filter(year => year >= 2010 && year <= 2024).map(year => parseInt(year));
-        const stages = ['I', 'II', 'III', 'IV'];
-        
-        estadiamentoYears.forEach(year => {
-            estadiamentoTemporal[year] = {};
-            stages.forEach(stage => {
-                estadiamentoTemporal[year][stage] = this.rawData.filter(d => 
-                    d.ANODIAG == year && d.ESTADIAM === stage
-                ).length;
-            });
-        });
-        
-        this.data.estadiamento_temporal = {
-            years: estadiamentoYears,
-            I: estadiamentoYears.map(year => estadiamentoTemporal[year].I || 0),
-            II: estadiamentoYears.map(year => estadiamentoTemporal[year].II || 0),
-            III: estadiamentoYears.map(year => estadiamentoTemporal[year].III || 0),
-            IV: estadiamentoYears.map(year => estadiamentoTemporal[year].IV || 0)
-        };
-    }
 
     // Novo método para processar os dados brutos e gerar o objeto dashboardData
     processRawData(processedData) {
@@ -592,6 +564,29 @@ class FCVDashboard {
             });
         }
         dashboardData.gender_tumor = genderTumorData;
+
+        // Calcular estadiamento temporal
+        const estadiamentoTemporal = {};
+        const allYears = _.uniq(processedData.map(d => parseInt(d.ANODIAG))).filter(year => !isNaN(year));
+        const estadiamentoYears = allYears.filter(year => year >= 2010 && year <= 2024).map(year => parseInt(year));
+        const stages = ['I', 'II', 'III', 'IV'];
+        
+        estadiamentoYears.forEach(year => {
+            estadiamentoTemporal[year] = {};
+            stages.forEach(stage => {
+                estadiamentoTemporal[year][stage] = processedData.filter(d => 
+                    d.ANODIAG == year && d.ESTADIAM === stage
+                ).length;
+            });
+        });
+        
+        dashboardData.estadiamento_temporal = {
+            years: estadiamentoYears.sort((a, b) => a - b),
+            I: estadiamentoYears.map(year => estadiamentoTemporal[year].I || 0),
+            II: estadiamentoYears.map(year => estadiamentoTemporal[year].II || 0),
+            III: estadiamentoYears.map(year => estadiamentoTemporal[year].III || 0),
+            IV: estadiamentoYears.map(year => estadiamentoTemporal[year].IV || 0)
+        };
 
         return dashboardData;
     }
@@ -2911,6 +2906,16 @@ class FCVDashboard {
             this.charts.maritalStatus.update('none');
         }
 
+        // Atualizar gráfico de estadiamento temporal
+        if (this.charts.estadiamento_temporal) {
+            this.charts.estadiamento_temporal.data.labels = dataToUse.estadiamento_temporal.years;
+            this.charts.estadiamento_temporal.data.datasets[0].data = dataToUse.estadiamento_temporal.I;
+            this.charts.estadiamento_temporal.data.datasets[1].data = dataToUse.estadiamento_temporal.II;
+            this.charts.estadiamento_temporal.data.datasets[2].data = dataToUse.estadiamento_temporal.III;
+            this.charts.estadiamento_temporal.data.datasets[3].data = dataToUse.estadiamento_temporal.IV;
+            this.charts.estadiamento_temporal.update('none');
+        }
+
         // Atualizar gráfico geográfico apenas se necessário
         if (this.charts.geograficChart && dataToUse && dataToUse.states) {
             const chart = this.charts.geograficChart;
@@ -3430,6 +3435,49 @@ class FCVDashboard {
         });
 
         this.setupDownloadButton('downloadEstadiamentoTemporal', chart, 'estadiamento-temporal.png');
+
+        // Adicionar event listener de clique no gráfico de estadiamento temporal
+        ctx.canvas.addEventListener('click', (e) => {
+            const activePoints = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, false);
+            if (activePoints.length > 0) {
+                const clickedElementIndex = activePoints[0].index;
+                const datasetIndex = activePoints[0].datasetIndex;
+                const clickedYear = chart.data.labels[clickedElementIndex];
+                const clickedStage = chart.data.datasets[datasetIndex].label.replace('Estágio ', '');
+
+                // Aplicar o filtro de ano
+                if (this.filters.period.includes(String(clickedYear))) {
+                    // Se o mesmo ano foi clicado novamente, limpar o filtro de período
+                    this.filters.period = [];
+                } else {
+                    // Aplicar o filtro de ano
+                    this.filters.period = [String(clickedYear)];
+                }
+
+                // Aplicar o filtro de estadiamento
+                if (this.filters.estadiam.includes(clickedStage)) {
+                    // Se o mesmo estágio foi clicado novamente, limpar o filtro
+                    this.filters.estadiam = [];
+                } else {
+                    // Aplicar o filtro de estágio
+                    this.filters.estadiam = [clickedStage];
+                }
+
+                // Atualizar os selects de filtros para refletir a seleção
+                const periodSelect = VirtualSelect.getInstance(document.getElementById('periodFilter'));
+                const estadiamSelect = VirtualSelect.getInstance(document.getElementById('estadiamFilter'));
+                
+                if (periodSelect) {
+                    periodSelect.setValue(this.filters.period);
+                }
+                
+                if (estadiamSelect) {
+                    estadiamSelect.setValue(this.filters.estadiam);
+                }
+
+                this.applyFilters();
+            }
+        });
     }
 
 
