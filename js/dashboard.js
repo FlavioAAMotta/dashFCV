@@ -2788,7 +2788,9 @@ class FCVDashboard {
         }
 
         if (this.filters.obits !== 'all') {
-            filteredRawData = filteredRawData.filter(d => d.OBITO_CA === this.filters.obits);
+            // Converter "Vivo" de volta para "Sem Informação" ao filtrar dados brutos
+            const obitsFilterValue = this.filters.obits === 'Vivo' ? 'Sem Informação' : this.filters.obits;
+            filteredRawData = filteredRawData.filter(d => d.OBITO_CA === obitsFilterValue);
         }
 
         if (this.filters.maritalStatus !== 'all') {
