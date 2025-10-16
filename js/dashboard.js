@@ -2465,8 +2465,9 @@ class FCVDashboard {
 
     renderHistologyPage(page) {
         const tbody = document.querySelector('#histologyTable tbody');
-        const histologyData = this.data.histology;
-        const totalPatients = this.data.overview.total_patients;
+        const dataToUse = this.filteredData || this.data;
+        const histologyData = dataToUse.histology;
+        const totalPatients = dataToUse.overview.total_patients;
 
         tbody.innerHTML = ''; // Limpar a tabela antes de renderizar a nova página
 
@@ -2502,7 +2503,8 @@ class FCVDashboard {
     }
 
     setupHistologyPagination() {
-        const totalRows = this.data.histology.labels.length;
+        const dataToUse = this.filteredData || this.data;
+        const totalRows = dataToUse.histology.labels.length;
         this.totalPages = Math.ceil(totalRows / this.histologyRowsPerPage);
 
         const paginationContainer = document.querySelector('#histologyPagination');
@@ -3073,6 +3075,10 @@ class FCVDashboard {
         // Atualizar tabela de cidades
         this.populateCitiesTable();
 
+        // Atualizar tabela de histologia
+        this.currentHistologyPage = 1; // Resetar para a primeira página ao aplicar filtros
+        this.setupHistologyPagination();
+        this.renderHistologyPage(this.currentHistologyPage);
 
         if (this.filters.tumorGeneral.length != 0) {
 
