@@ -1,0 +1,67 @@
+==========================================
+DASHBOARD FCV - INSTRUÇÕES DE INSTALAÇÃO
+==========================================
+
+ESTRUTURA DOS ARQUIVOS:
+----------------------
+Descompactar o ZIP mantendo a estrutura de pastas:
+
+/dashFCV/
+├── index.html          (página principal)
+├── css/
+│   └── styles.css
+├── js/
+│   └── dashboard.js
+├── data/
+│   ├── dashboard_data.json
+│   └── RHC_2024_DATA.csv
+└── assets/
+    └── (imagens)
+
+
+INSTALAÇÃO NO SERVIDOR:
+-----------------------
+1. Descompactar o arquivo ZIP em uma pasta no servidor
+   Exemplo: /var/www/html/dashboard/ ou similar
+
+2. Garantir que todos os arquivos estejam acessíveis via HTTP/HTTPS
+
+3. A página principal é o index.html
+
+4. Permissões necessárias:
+   - Leitura para todos os arquivos
+   - Não requer escrita
+   - Não requer execução de scripts server-side
+
+
+REQUISITOS:
+----------
+✅ Apenas servidor web (Apache, Nginx, IIS, etc.)
+✅ Não requer PHP, Node.js ou qualquer backend
+✅ Não requer banco de dados
+✅ Funciona com arquivos estáticos apenas
+
+
+IMPORTANTE:
+-----------
+⚠️ Os arquivos devem ser servidos via HTTP/HTTPS
+⚠️ NÃO funcionará se abertos diretamente (file://)
+⚠️ Manter a estrutura de pastas intacta
+
+
+SUPORTE:
+--------
+Em caso de dúvidas:
+Flávio - Coordenador do Núcleo de Inovação e Tecnologia em Saúde da FCV
+(32)99810-9876
+
+
+TECNOLOGIAS UTILIZADAS:
+----------------------
+- HTML5
+- CSS3
+- JavaScript (ES6+)
+- Chart.js (via CDN)
+- PapaParse (via CDN)
+- Todas as bibliotecas são carregadas via CDN (não requer instalação)
+
