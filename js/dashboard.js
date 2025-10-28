@@ -248,7 +248,7 @@ class FCVDashboard {
 
         // Proporção de pacientes com menos de 40 anos
         const Percentage_Under18 = parseFloat(
-            (processedData.filter(d => d.IDADE_DIAG < 40).length /
+            (processedData.filter(d => d.IDADE <= 40).length /
                 processedData.length * 100).toFixed(1)
         );
 
@@ -258,7 +258,7 @@ class FCVDashboard {
         );
 
         const validAges = processedData
-            .map(d => Number(d.IDADE_DIAG))
+            .map(d => Number(d.IDADE))
             .filter(age => !isNaN(age) && age > 0); // filtra apenas idades válidas
 
         const avg = validAges.length > 0
@@ -356,7 +356,7 @@ class FCVDashboard {
         };
 
         // Idades únicas (para filtro)
-        const uniqueAges = _.sortBy(_.uniq(processedData.map(d => d.IDADE_DIAG).filter(age => age != null && age !== '')));
+        const uniqueAges = _.sortBy(_.uniq(processedData.map(d => d.IDADE).filter(age => age != null && age !== '')));
         dashboardData.age = {
             labels: uniqueAges
         };
